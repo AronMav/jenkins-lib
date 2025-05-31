@@ -65,7 +65,7 @@ class SyntaxCheck {
                 command += " --allure-results2 $allureReportDir"
             }
 
-            FilePath vrunnerSettings = FileUtils.getFilePath("$env.WORKSPACE/$options.vrunnerSettings")
+            String vrunnerSettings = options.vrunnerSettings
             if (vrunnerSettings.exists()) {
                 command += " --settings $vrunnerSettings"
             }
