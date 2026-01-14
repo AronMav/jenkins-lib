@@ -6,7 +6,7 @@ plugins {
     jacoco
     id("com.mkobit.jenkins.pipelines.shared-library") version "0.10.1"
     id("com.github.ben-manes.versions") version "0.51.0"
-    id("org.jenkins-ci.jpi") version "0.52.0-rc.1" apply false
+    id("org.jenkins-ci.jpi") version "0.56.1" apply false
 }
 
 repositories {
@@ -36,7 +36,7 @@ val junitVersion = "5.11.0"
 val spockVersion = "1.3-groovy-2.4"
 val groovyVersion = "2.4.21"
 val slf4jVersion = "2.0.16"
-val jsonschemaVersion = "4.37.0"
+val jsonschemaVersion = "4.38.0"
 
 dependencies {
     implementation("org.codehaus.groovy", "groovy-all", groovyVersion)
@@ -50,7 +50,7 @@ dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
 
     testImplementation("org.assertj", "assertj-core", "3.26.3")
-    testImplementation("org.mockito", "mockito-core", "5.13.0")
+    testImplementation("org.mockito", "mockito-core", "5.21.0")
 
     testImplementation("org.slf4j", "slf4j-api", slf4jVersion)
     testImplementation("org.slf4j", "slf4j-simple", slf4jVersion)
@@ -104,8 +104,8 @@ sharedLibrary {
     // TODO: retrieve downloaded plugin resource
     pluginDependencies {
         dependency("org.jenkins-ci.plugins", "pipeline-build-step", "540.vb_e8849e1a_b_d8")
-        dependency("org.jenkins-ci.plugins", "pipeline-utility-steps", "2.17.0")
-        dependency("org.jenkins-ci.plugins", "git", "5.2.2")
+        dependency("org.jenkins-ci.plugins", "pipeline-utility-steps", "2.18.0")
+        dependency("org.jenkins-ci.plugins", "git", "5.8.1")
         dependency("org.jenkins-ci.plugins", "http_request", "1.19")
         dependency("org.jenkins-ci.plugins", "timestamper", "1.27")
         dependency("org.jenkins-ci.plugins", "credentials", "1371.vfee6b_095f0a_3")
@@ -115,7 +115,7 @@ sharedLibrary {
         dependency("org.jenkins-ci.modules", "sshd", "3.329.v668e35efc720")
 
         dependency("org.6wind.jenkins", "lockable-resources", "1255.vf48745da_35d0")
-        dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.31.1")
+        dependency("ru.yandex.qatools.allure", "allure-jenkins-plugin", "2.34.0")
         dependency("io.jenkins.blueocean", "blueocean-pipeline-api-impl", "1.27.14")
         dependency("sp.sd", "file-operations", "266.v9d4e1eb_235b_a_")
 
