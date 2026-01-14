@@ -101,7 +101,7 @@ class SonarScanner implements Serializable {
         }
 
         def sonarQubeInstallation = config.sonarQubeOptions.sonarQubeInstallation
-        if (sonarQubeInstallation == '') {
+        if (sonarQubeInstallation == null || sonarQubeInstallation.isEmpty()) {
             sonarQubeInstallation = null
         }
 

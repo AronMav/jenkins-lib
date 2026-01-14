@@ -23,7 +23,19 @@ class FileUtils {
         if (nodeName == "master" || nodeName == "built-in") {
             return new FilePath(new File(path));
         } else {
-            return new FilePath(Jenkins.getInstanceOrNull().getComputer(nodeName).getChannel(), path);
+            def jenkins = Jenkins.getInstanceOrNull()
+            if (jenkins == null) {
+                steps.error 'Не удалось получить экземпляр Jenkins'
+            }
+            def computer = jenkins.getComputer(nodeName)
+            if (computer == null) {
+                steps.error "Не удалось найти компьютер с именем: ${nodeName}"
+            }
+            def channel = computer.getChannel()
+            if (channel == null) {
+                steps.error "Не удалось получить канал связи с агентом: ${nodeName}"
+            }
+            return new FilePath(channel, path);
         }
     }
 

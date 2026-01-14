@@ -14,7 +14,7 @@ class EdtCliEngineFactory {
      */
     static IEdtCliEngine getEngine(String edtVersion) {
 
-        if (edtVersion == null || edtVersion.trim().empty) {
+        if (edtVersion == null || edtVersion.trim().isEmpty()) {
             throw new IllegalArgumentException("Версия EDT не может быть пустой")
         }
 

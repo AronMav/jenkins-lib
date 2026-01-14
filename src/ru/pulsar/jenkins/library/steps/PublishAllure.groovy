@@ -66,8 +66,8 @@ class PublishAllure implements Serializable {
     private void safeUnstash(String stashName) {
         try {
             steps.unstash(stashName)
-        } catch (Exception ignored) {
-            Logger.println("Can't unstash $stashName")
+        } catch (Exception e) {
+            Logger.println("Can't unstash $stashName: ${e.getMessage()}")
         }
     }
 }

@@ -66,11 +66,11 @@ class SyntaxCheck {
             }
 
             String vrunnerSettings = options.vrunnerSettings
-            if (vrunnerSettings.exists()) {
+            if (vrunnerSettings != null && !vrunnerSettings.isEmpty() && steps.fileExists(vrunnerSettings)) {
                 command += " --settings $vrunnerSettings"
             }
 
-            if (!options.exceptionFile.empty && steps.fileExists(options.exceptionFile)) {
+            if (options.exceptionFile != null && !options.exceptionFile.isEmpty() && steps.fileExists(options.exceptionFile)) {
                 command += " --exception-file $options.exceptionFile"
             }
 

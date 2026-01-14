@@ -21,7 +21,7 @@ class Cmd implements Serializable {
 
         def returnValue
 
-        if (returnStatus & returnStdout) {
+        if (returnStatus && returnStdout) {
             steps.error("returnStatus and returnStdout are not supported at the same time")
         }
 

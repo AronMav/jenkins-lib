@@ -6,6 +6,6 @@ def call() {
     try {
         unstash GetExtensions.EXTENSIONS_STASH
     } catch (Exception e) {
-        echo e.toString()
+        echo "Не удалось получить stash расширений: ${e.getMessage()}"
     }
 }
