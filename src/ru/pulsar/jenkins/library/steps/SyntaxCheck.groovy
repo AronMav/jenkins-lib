@@ -74,7 +74,7 @@ class SyntaxCheck {
                 command += " --exception-file $options.exceptionFile"
             }
 
-            if (options.checkModes.length > 0) {
+            if (options.checkModes != null && options.checkModes.length > 0) {
                 def checkModes = options.checkModes.join(" ")
                 command += " --mode $checkModes"
             }

@@ -44,7 +44,7 @@ class SmokeTest implements Serializable, Coverable {
         String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
 
         String vrunnerSettings = options.vrunnerSettings
-        if (steps.fileExists(vrunnerSettings)) {
+        if (vrunnerSettings != null && !vrunnerSettings.isEmpty() && steps.fileExists(vrunnerSettings)) {
             command += " --settings $vrunnerSettings"
         }
 
@@ -53,8 +53,9 @@ class SmokeTest implements Serializable, Coverable {
             command += " --pathxunit $xddTestRunnerPath"
         }
 
-        if (steps.fileExists(options.xddConfigPath)) {
-            command += " --xddConfig $options.xddConfigPath"
+        String xddConfigPath = options.xddConfigPath
+        if (xddConfigPath != null && !xddConfigPath.isEmpty() && steps.fileExists(xddConfigPath)) {
+            command += " --xddConfig $xddConfigPath"
         }
 
         String junitReport = "build/out/jUnit/smoke/smoke.xml"
@@ -92,7 +93,7 @@ class SmokeTest implements Serializable, Coverable {
             command = command.replace(';', '\\;')
         }
 
-        if (!VRunner.configContainsSetting(vrunnerSettings, "testsPath")) {
+        if (vrunnerSettings == null || !VRunner.configContainsSetting(vrunnerSettings, "testsPath")) {
             String testsPath = "oscript_modules/add/tests/smoke"
             if (!steps.fileExists(testsPath)) {
                 testsPath = '$addRoot/tests/smoke'

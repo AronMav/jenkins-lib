@@ -46,7 +46,9 @@ class Bdd implements Serializable, Coverable {
                     returnStatuses.add(bddReturnStatus)
                 }
 
-                if (Collections.max(returnStatuses) > 2) {
+                if (returnStatuses.isEmpty()) {
+                    Logger.println("Нет шагов для выполнения BDD тестов")
+                } else if (Collections.max(returnStatuses) > 2) {
                     steps.error("Получен неожиданный/неверный результат работы. Возможно, работа 1С:Предприятие завершилась некорректно, или возникла ошибка при запуске")
                 } else if (returnStatuses.contains(1)) {
                     steps.unstable("Тестирование сценариев завершилось, но часть фич/сценариев упала")

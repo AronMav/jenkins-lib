@@ -17,8 +17,8 @@ tasks {
 
     register<org.jenkinsci.gradle.plugins.jpi.TestDependenciesTask>("resolveIntegrationTestDependencies") {
         into {
-            val javaConvention = project.convention.getPlugin<JavaPluginConvention>()
-            File("${javaConvention.sourceSets.integrationTest.get().output.resourcesDir}/test-dependencies")
+            val javaExtension = project.extensions.getByType<JavaPluginExtension>()
+            File("${javaExtension.sourceSets.getByName("integrationTest").output.resourcesDir}/test-dependencies")
         }
         configuration = configurations.integrationTestRuntimeClasspath.get()
     }
@@ -91,7 +91,7 @@ tasks.check {
 tasks.jacocoTestReport {
     reports {
         xml.required.set(true)
-        xml.outputLocation.set(File("$buildDir/reports/jacoco/test/jacoco.xml"))
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/test/jacoco.xml"))
     }
 }
 

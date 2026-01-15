@@ -58,10 +58,14 @@ class ZipInfobase implements Serializable {
         }
 
         try {
-            return config."${stageName}Options".archiveInfobase
+            def stageOptions = config."${stageName}Options"
+            if (stageOptions == null) {
+                return defaultOptions
+            }
+            def archiveInfobase = stageOptions.archiveInfobase
+            return archiveInfobase ?: defaultOptions
         } catch(MissingPropertyException | NullPointerException e) {
             Logger.println("Ошибка при получении настроек архивации для этапа ${stageName}: ${e.message}")
-            Logger.println(e.toString())
             return defaultOptions
         }
     }

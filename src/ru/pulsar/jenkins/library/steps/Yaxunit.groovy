@@ -45,11 +45,11 @@ class Yaxunit implements Serializable, Coverable {
         String ibConnection = ' --ibconnection "/F./build/ib"'
 
         // Готовим конфиг для yaxunit
-        String yaxunitConfigPath = options.configPath
+        String yaxunitConfigPath = options.configPath ?: 'build/yaxunit.json'
         if (!steps.fileExists(yaxunitConfigPath)) {
             Logger.println("Using default yaxunit config")
             def defaultYaxunitConfig = steps.libraryResource DEFAULT_YAXUNIT_CONFIGURATION_RESOURCE
-            steps.writeFile(options.configPath, defaultYaxunitConfig, 'UTF-8')
+            steps.writeFile(yaxunitConfigPath, defaultYaxunitConfig, 'UTF-8')
         }
         def yaxunitConfig = FileUtils.getFilePath("$env.WORKSPACE/$yaxunitConfigPath")
 
@@ -58,11 +58,8 @@ class Yaxunit implements Serializable, Coverable {
 
         // Переопределяем настройки vrunner
         String vrunnerSettings = options.vrunnerSettings
-        if (steps.fileExists(vrunnerSettings)) {
-            String vrunnerSettingsParam = " --settings $vrunnerSettings"
-
-            runTestsCommand += vrunnerSettingsParam
-
+        if (vrunnerSettings != null && !vrunnerSettings.isEmpty() && steps.fileExists(vrunnerSettings)) {
+            runTestsCommand += " --settings $vrunnerSettings"
         }
 
         steps.withEnv(logosConfig) {

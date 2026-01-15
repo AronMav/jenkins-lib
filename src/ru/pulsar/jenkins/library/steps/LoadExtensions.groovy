@@ -38,13 +38,18 @@ class LoadExtensions implements Serializable {
             // подключаются все расширения, у которых явно указано подключение на текущем этапе
             // и те расширения, в которых этапы подключения не указаны вообще
             this.extensionsFiltered = extensions.findAll({ extension ->
-                extension.stages.contains(this.stageName) || extension.stages.length == 0
+                extension.stages == null || extension.stages.length == 0 || extension.stages.contains(this.stageName)
             })
         } else {
             // на остальных этапах подключаются расширения, которые не были подключены на этапе initInfoBase
             // и у которых явно указано подключение на текущем этапе
+            // Также подключаем расширения с пустым stages, если они не были подключены ранее
             this.extensionsFiltered = extensions.findAll({ extension ->
-                !extension.stages.contains("initInfoBase") && extension.stages.contains(this.stageName)
+                if (extension.stages == null || extension.stages.length == 0) {
+                    // Расширения без указанных этапов не подключаем повторно (они уже подключены на initInfoBase)
+                    return false
+                }
+                return !extension.stages.contains("initInfoBase") && extension.stages.contains(this.stageName)
             })
         }
 
@@ -102,6 +107,6 @@ class LoadExtensions implements Serializable {
             return ""
         }
 
-        return optionsInstance.vrunnerSettings
+        return optionsInstance.vrunnerSettings ?: ""
     }
 }

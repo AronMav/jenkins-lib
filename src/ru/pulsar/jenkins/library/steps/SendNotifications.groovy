@@ -20,11 +20,19 @@ class SendNotifications implements Serializable {
             return
         }
 
-        def emailNotification = new EmailNotification(config);
-        emailNotification.run()
+        try {
+            def emailNotification = new EmailNotification(config)
+            emailNotification.run()
+        } catch (Exception e) {
+            Logger.println("Ошибка при отправке email уведомления: ${e.message}")
+        }
 
-        def telegramNotification = new TelegramNotification(config);
-        telegramNotification.run();
+        try {
+            def telegramNotification = new TelegramNotification(config)
+            telegramNotification.run()
+        } catch (Exception e) {
+            Logger.println("Ошибка при отправке telegram уведомления: ${e.message}")
+        }
 
     }
 }
