@@ -38,8 +38,79 @@ class SmokeTest implements Serializable, Coverable {
         }
 
         def options = config.smokeTestOptions
-        def env = steps.env()
 
+        if (options.useVanessaAutomation) {
+            runWithVanessaAutomation(steps, options, logosConfig)
+        } else {
+            runWithXddTestRunner(steps, options, logosConfig)
+        }
+    }
+
+    private def runWithVanessaAutomation(IStepExecutor steps, def options, List<String> logosConfig) {
+        Logger.println("Запуск дымовых тестов через Vanessa-Automation")
+
+        String vrunnerPath = VRunner.getVRunnerPath()
+        String command = "$vrunnerPath vanessa --ibconnection \"/F./build/ib\""
+
+        String vrunnerSettings = options.vrunnerSettings
+        if (vrunnerSettings != null && !vrunnerSettings.isEmpty() && steps.fileExists(vrunnerSettings)) {
+            command += " --settings $vrunnerSettings"
+        }
+
+        String vanessaSettings = options.vanessaSettings
+        if (vanessaSettings == null || vanessaSettings.isEmpty()) {
+            vanessaSettings = "./tools/VASmokeParams.json"
+        }
+        if (steps.fileExists(vanessaSettings)) {
+            command += " --vanessasettings $vanessaSettings"
+        }
+
+        String smokeFeaturesPath = options.smokeFeaturesPath
+        if (smokeFeaturesPath == null || smokeFeaturesPath.isEmpty()) {
+            smokeFeaturesPath = "/storage/features/smoke"
+        }
+        command += " --path $smokeFeaturesPath"
+
+        String pathVanessa = options.pathVanessa
+        if (pathVanessa == null || pathVanessa.isEmpty()) {
+            pathVanessa = "/storage/vanessa-automation/vanessa-automation.epf"
+        }
+        command += " --pathvanessa $pathVanessa"
+
+        String allureReportDir = "build/out/allure/smoke"
+        steps.createDir(allureReportDir)
+        steps.createDir('build/out')
+
+        steps.withEnv(logosConfig) {
+            List<Integer> returnStatuses = []
+
+            steps.withCoverage(config, this, options) {
+                Logger.println("Выполнение дымовых тестов командой: ${command}")
+                Integer smokeReturnStatus = VRunner.exec(command, true)
+                returnStatuses.add(smokeReturnStatus)
+            }
+
+            if (returnStatuses.isEmpty()) {
+                Logger.println("Нет шагов для выполнения дымовых тестов")
+            } else if (Collections.max(returnStatuses) > 2) {
+                steps.error("Получен неожиданный/неверный результат работы. Возможно, работа 1С:Предприятие завершилась некорректно")
+            } else if (returnStatuses.contains(1)) {
+                steps.unstable("Дымовое тестирование завершилось, но часть тестов упала")
+            } else {
+                Logger.println("Дымовое тестирование завершилось успешно")
+            }
+        }
+
+        if (options.publishToAllureReport) {
+            steps.stash(ALLURE_STASH, "$allureReportDir/**", true)
+            steps.archiveArtifacts("$allureReportDir/**")
+        }
+    }
+
+    private def runWithXddTestRunner(IStepExecutor steps, def options, List<String> logosConfig) {
+        Logger.println("Запуск дымовых тестов через xddTestRunner")
+
+        def env = steps.env()
         String vrunnerPath = VRunner.getVRunnerPath()
         String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
 
@@ -70,17 +141,13 @@ class SmokeTest implements Serializable, Coverable {
 
         if (options.publishToJUnitReport) {
             steps.createDir(junitReportDir)
-
             String junitReportCommand = "ГенераторОтчетаJUnitXML{$junitReport}"
-
             reportsConfigConstructor.add(junitReportCommand)
         }
 
         if (options.publishToAllureReport) {
             steps.createDir(allureReportDir)
-
             String allureReportCommand = "ГенераторОтчетаAllureXMLВерсия2{$allureReport}"
-
             reportsConfigConstructor.add(allureReportCommand)
         }
 
@@ -105,7 +172,6 @@ class SmokeTest implements Serializable, Coverable {
         }
 
         steps.withEnv(logosConfig) {
-
             steps.withCoverage(config, this, options) {
                 VRunner.exec(command, true)
             }

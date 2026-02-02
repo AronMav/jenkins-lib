@@ -97,6 +97,10 @@
   "smoke": {
     "vrunnerSettings": "./tools/vrunner.json",
     "xddConfigPath": "./tools/xUnitParams.json",
+    "useVanessaAutomation": false,
+    "vanessaSettings": "./tools/VASmokeParams.json",
+    "smokeFeaturesPath": "/storage/features/smoke",
+    "pathVanessa": "/storage/vanessa-automation/vanessa-automation.epf",
     "publishToAllureReport": false,
     "publishToJUnitReport": true,
     "coverage": false,

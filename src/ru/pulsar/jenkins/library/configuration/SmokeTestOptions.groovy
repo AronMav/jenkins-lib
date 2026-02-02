@@ -17,6 +17,26 @@ class SmokeTestOptions extends StepCoverageOptions implements Serializable {
     """)
     String xddConfigPath
 
+    @JsonPropertyDescription("""Использовать Vanessa-Automation вместо xddTestRunner для дымовых тестов.
+    По умолчанию выключено (используется xddTestRunner).
+    """)
+    boolean useVanessaAutomation
+
+    @JsonPropertyDescription("""Путь к конфигурационному файлу Vanessa-Automation для дымовых тестов.
+    По умолчанию содержит значение "./tools/VASmokeParams.json".
+    """)
+    String vanessaSettings
+
+    @JsonPropertyDescription("""Путь к каталогу feature-файлов дымовых тестов.
+    По умолчанию содержит значение "/storage/features/smoke".
+    """)
+    String smokeFeaturesPath
+
+    @JsonPropertyDescription("""Путь к обработке vanessa-automation.epf.
+    По умолчанию содержит значение "/storage/vanessa-automation/vanessa-automation.epf".
+    """)
+    String pathVanessa
+
     @JsonPropertyDescription("""Выполнять публикацию результатов в отчет Allure.
     По умолчанию выключено.
     """)
@@ -33,6 +53,10 @@ class SmokeTestOptions extends StepCoverageOptions implements Serializable {
         return "SmokeTestOptions{" +
             "vrunnerSettings='" + vrunnerSettings + '\'' +
             ", xddConfigPath='" + xddConfigPath + '\'' +
+            ", useVanessaAutomation=" + useVanessaAutomation +
+            ", vanessaSettings='" + vanessaSettings + '\'' +
+            ", smokeFeaturesPath='" + smokeFeaturesPath + '\'' +
+            ", pathVanessa='" + pathVanessa + '\'' +
             ", publishToAllureReport=" + publishToAllureReport +
             ", publishToJUnitReport=" + publishToJUnitReport +
             ", coverage=" + coverage +
